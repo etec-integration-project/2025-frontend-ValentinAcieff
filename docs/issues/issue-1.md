@@ -1,9 +1,9 @@
 # Issue #1: Agregar Documentación Automática Basada en Cambios en Milestones, Issues y Pull Requests de GitHub
 
-- Estado: open
+- Estado: closed
 - Creado por: dqmdz-etec
 - Creado el: 4/28/2025, 12:53:14 PM
-- Actualizado el: 4/28/2025, 12:53:14 PM
+- Actualizado el: 4/29/2025, 12:43:10 PM
 
 ## Descripción
 # Agregar Documentación Automática Basada en Cambios en Milestones, Issues y Pull Requests de GitHub
