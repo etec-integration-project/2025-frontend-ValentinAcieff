@@ -1,31 +1,33 @@
-const fs = require('fs-extra');
-const path = require('path');
+// Convertido a ESM
+import { Octokit } from '@octokit/rest';
+import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Directorio de documentación
+// Obtener el directorio actual en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Configuración de la API de GitHub
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
+});
+
+// Obtener detalles del repositorio desde las variables de entorno
+const [owner, repo] = process.env.REPO_NAME.split('/');
+
 const docsDir = path.join(process.cwd(), 'docs');
 const issuesDir = path.join(docsDir, 'issues');
 const prDir = path.join(docsDir, 'pull-requests');
 const milestonesDir = path.join(docsDir, 'milestones');
 
-// Función principal que usa import dinámico para cargar Octokit
 async function main() {
   try {
-    // Importar Octokit dinámicamente
-    const { Octokit } = await import('@octokit/rest');
-    
-    // Configuración de la API de GitHub
-    const octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
-    
-    // Obtener detalles del repositorio desde las variables de entorno
-    const [owner, repo] = process.env.REPO_NAME.split('/');
-    
     await createDocsStructure();
     await generateMainIndex();
-    await generateIssuesDocs(octokit, owner, repo);
-    await generatePullRequestsDocs(octokit, owner, repo);
-    await generateMilestonesDocs(octokit, owner, repo);
+    await generateIssuesDocs();
+    await generatePullRequestsDocs();
+    await generateMilestonesDocs();
     console.log('📄 Documentación generada exitosamente.');
   } catch (error) {
     console.error('❌ Error al generar la documentación:', error.message);
@@ -54,7 +56,7 @@ Este directorio contiene documentación generada automáticamente basada en la a
   await fs.writeFile(path.join(docsDir, 'README.md'), content);
 }
 
-async function generateIssuesDocs(octokit, owner, repo) {
+async function generateIssuesDocs() {
   try {
     const { data: issues } = await octokit.issues.listForRepo({
       owner,
@@ -77,7 +79,7 @@ async function generateIssuesDocs(octokit, owner, repo) {
       const labels = issue.labels.map(label => label.name).join(', ');
       const assignee = issue.assignee ? issue.assignee.login : 'No asignado';
       indexContent += `| [#${issue.number}](./issue-${issue.number}.md) | ${issue.state} | ${issue.title} | ${assignee} | ${labels} | ${new Date(issue.created_at).toLocaleDateString()} | ${new Date(issue.updated_at).toLocaleDateString()} |\n`;
-      await generateIssueDetailPage(octokit, owner, repo, issue);
+      await generateIssueDetailPage(issue);
     }
     await fs.writeFile(path.join(issuesDir, 'README.md'), indexContent);
   } catch (error) {
@@ -85,7 +87,7 @@ async function generateIssuesDocs(octokit, owner, repo) {
   }
 }
 
-async function generateIssueDetailPage(octokit, owner, repo, issue) {
+async function generateIssueDetailPage(issue) {
   try {
     const { data: comments } = await octokit.issues.listComments({
       owner,
@@ -115,7 +117,7 @@ ${issue.body || 'Sin descripción'}
   }
 }
 
-async function generatePullRequestsDocs(octokit, owner, repo) {
+async function generatePullRequestsDocs() {
   try {
     const { data: prs } = await octokit.pulls.list({
       owner,
@@ -160,7 +162,7 @@ ${pr.body || 'Sin descripción'}
   }
 }
 
-async function generateMilestonesDocs(octokit, owner, repo) {
+async function generateMilestonesDocs() {
   try {
     const { data: milestones } = await octokit.issues.listMilestonesForRepo({
       owner,
