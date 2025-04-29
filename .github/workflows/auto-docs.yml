@@ -1,0 +1,43 @@
+name: Actualización Automática de Documentación
+
+on:
+  issues:
+    types: [opened, edited, closed, reopened]
+  pull_request:
+    types: [opened, closed, edited, reopened]
+  milestone:
+    types: [created, edited, closed, reopened]
+
+jobs:
+  update-documentation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias
+        run: npm install @octokit/rest fs-extra marked
+
+      - name: Generar documentación
+        run: node .github/scripts/generate-docs.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+
+      - name: Commit y push de la documentación
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/
+          git diff --quiet && git diff --staged --quiet || git commit -m "docs: Actualización automática de documentación [skip ci]"
+          git push
