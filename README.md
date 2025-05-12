@@ -85,7 +85,7 @@ Licencia
 
 Este proyecto está licenciado bajo la Licencia Pública General de GNU (GPLv3). Puedes usar, modificar y distribuir el software bajo los términos de esta licencia.
 
-Consulta el archivo LICENSE para más detalles.CON TODO ESTO ESCRITO YA ESTA LO DE LA LICENCIA ?
+Consulta el archivo LICENSE para más detalles.
 
 # my-new-project
 
