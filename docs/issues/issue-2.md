@@ -1,9 +1,9 @@
 # Issue #2: Adaptar el README para ser consistente con la dockerización
 
-- Estado: open
+- Estado: closed
 - Creado por: dqmdz-etec
 - Creado el: 4/28/2025, 1:33:32 PM
-- Actualizado el: 4/28/2025, 1:33:32 PM
+- Actualizado el: 4/29/2025, 12:57:00 PM
 
 ## Descripción
 ## 📌 Solicitud: Redacción de README.md según estándares internacionales

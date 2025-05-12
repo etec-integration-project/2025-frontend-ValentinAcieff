@@ -6,4 +6,4 @@ Este directorio contiene documentación generada automáticamente basada en la a
 - [Pull Requests](./pull-requests/README.md): Cambios integrados y en progreso
 - [Milestones](./milestones/README.md): Hitos y objetivos del proyecto
 
-*Última actualización: 4/29/2025, 12:56:42 PM*
+*Última actualización: 5/12/2025, 1:14:59 PM*
